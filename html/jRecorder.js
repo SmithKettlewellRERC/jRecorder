@@ -178,7 +178,15 @@
 					
 		getFlashMovie(jRecorderSettings['recorder_name']).jSendFileToServer();
 							
-	} 
+	}
+
+	$.jRecorder.addParameter = function(key, val){
+		getFlashMovie(jRecorderSettings['recorder_name']).jAddParameter(key, val);
+	}
+
+	$.jRecorder.removeParameter = function(key){
+		getFlashMovie(jRecorderSettings['recorder_name']).jRemoveParameter(key);
+	}
 	
 	$.jRecorder.callback_started_recording = function(){
 		
