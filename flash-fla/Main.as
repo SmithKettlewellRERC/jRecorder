@@ -23,11 +23,6 @@ package
 	import org.as3wavsound.WavSound;
 	import org.as3wavsound.WavSoundChannel;
 	import flash.media.SoundChannel;
-	import flash.net.URLVariables;
-	import flash.net.URLRequestHeader;
-	import UploadPostHelper;
-	
-	
 
 	public class Main extends Sprite
 	{
@@ -62,8 +57,6 @@ package
 
 		private function addListeners():void
 		{
-			
-			
 			recorder.addEventListener(RecordingEvent.RECORDING, recording);
 			recorder.addEventListener(Event.COMPLETE, recordComplete);
 			stage.addEventListener(Event.ENTER_FRAME, updateMeter);
@@ -80,18 +73,12 @@ package
 				ExternalInterface.addCallback("jStopPreview" , jStopPreview );
 				
 				ExternalInterface.call("jRecorderFlashInitialized" );
-			}
-			
-			
+			}			
 		}
-
-		
-		
 		
 		//external java script function call to start record
 		public function jStartRecording(max_time):void
 		{
-			
 			maxTime = max_time;
 			
 			if (mic != null)
@@ -112,16 +99,11 @@ package
 			recorder.stop();
 			mic.setLoopBack(false);
 			ExternalInterface.call("$.jRecorder.callback_stopped_recording");
-			
-			//finalize_recording();
-			
 		}
 		
 		public function jSendFileToServer():void
 		{
-			
-			finalize_recording();
-			
+			finalize_recording();	
 		}
 		
 		public function jAddParameter(key,val):void
@@ -137,7 +119,6 @@ package
 		
 		public function jStopPreview():void
 		{
-			
 			//no function is currently available;
 			if( soundChannel )
 			{
@@ -172,13 +153,11 @@ package
 			{
 				jStopRecording();
 			}
-
-			 
-			
 		}
 
 		private function recordComplete(e:Event):void
 		{
+			
 		}
 		
 		private function previewComplete( e:Event ):void
