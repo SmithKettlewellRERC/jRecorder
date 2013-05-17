@@ -212,19 +212,21 @@ package
 		//functioon send data to server
 		private function finalize_recording():void
 		{
-			var postVariables:URLVariables = new URLVariables();
-			
 			var _var1:String= '';
-			
+
 			var globalParam = LoaderInfo(this.root.loaderInfo).parameters;
-			for (var element:String in globalParam)
+			for (var element:String in globalParam) {
+				
+					if (element == 'host'){
+		   			_var1 =   globalParam[element];
+					}
+			}
+
+			if( ExternalInterface.available )
 			{
-				if (element == 'host')
-				{
-					_var1 =   globalParam[element];
-				}
-			} 
-			
+				ExternalInterface.call("$.jRecorder.callback_finished_recording");
+			}
+
 			if(_var1 != '')
 			{
 				var key:String;
@@ -233,31 +235,19 @@ package
 				{
 					if( urlParams.hasOwnProperty(key))
 					{
-						if( key != "filename" )
-						{
-							valuePairs.push( escape(key) + "=" + escape(urlParams[key]));
-						}
+						valuePairs.push( escape(key) + "=" + escape(urlParams[key]));
 					}
 				}
-				
+
+				_var1 += (_var1.indexOf("?") > -1 ? "&" : "?") + valuePairs.join("&");
+
 				var req:URLRequest = new URLRequest(_var1);
-				
-				var contentTypeHeader:URLRequestHeader = new URLRequestHeader( "Content-type", "multipart/form-data; boundary=" + UploadPostHelper.getBoundary() );
-				
-				if( ExternalInterface.available )
-				{
-					ExternalInterface.call("$.jRecorder.callback_console_log" , "3" );
-				}
-				
-				req.requestHeaders.push( contentTypeHeader );
-				
 				recording_loader = new URLLoader();
 				recording_loader.addEventListener(Event.COMPLETE, postAudio_urlLoader_complete);
-				
-				req.data = UploadPostHelper.getPostData( escape(urlParams["filename"]) , recorder.output , postVariables );
-								
+				req.data = recorder.output;
+				req.contentType = 'application/octet-stream';
 				req.method = URLRequestMethod.POST;
-				recording_loader.load(req);			
+				recording_loader.load(req);
 			}
 			
 		}
