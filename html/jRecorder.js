@@ -30,12 +30,11 @@
 			if ( methods[options] ) 
 			{
 				return methods[ options ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-				
 			}
 			return false;
 		}
 		
-		// If the element to be appended is not defind, append to body
+		// If the element to be appended is not defined, append to body
 		if(element == undefined)
 		{
 			element = $("body");
@@ -59,11 +58,13 @@
 			'callback_stopped_recording': function(){},
 			'callback_error_recording' : function(){},
 			'callback_activityTime': function(time){},
-			'callback_activityLevel' : function(level){}
+			'callback_activityLevel' : function(level){},
+			'log' : function(info){ console.log(info) },
+			'debug' : false
 		};
 	
 	
-		// If option array is passed, merget the values
+		// If option array is passed, merge the values
 		if ( options )
 		{ 
 	        $.extend( settings, options );
@@ -209,6 +210,15 @@
 	{
 		jRecorderSettings['callback_preview_complete']();
 	}
+
+	$.jRecorder.log = function(log)
+	{
+		if(jRecorderSettings['debug'])
+		{
+			jRecorderSettings['log']( log );
+		}
+	}
+
 		
 	// Function to return flash object from name
 	function getFlashMovie(movieName)
