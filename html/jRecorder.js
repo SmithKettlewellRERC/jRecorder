@@ -13,75 +13,67 @@
  * Date: 18 March 2013
  */
 
-/* Code is not verified using http://www.jshint.com/ */
-
-
 (function ($){
-
 	var methods = {
-    	play : function( options ) { 
-					
-					alert(options);
-				
-	 			},
+    	play : function( options ) {	
+			alert(options);
+		},
     	pause : function( ) { }
-    
   	};
 	
 	var jRecorderSettings = {} ;
 	
 	$.jRecorder = function( options, element ) {
-		// allow instantiation without initializing for simple inheritance
 		
-		
+		// Allow instantiation without initializing for simple inheritance
 		if(typeof(options) == "string")
 		{
 			if ( methods[options] ) 
 			{
 				return methods[ options ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-				
 			}
 			return false;
 		}
 		
-		//if the element to be appended is not defind, append to body
+		// If the element to be appended is not defined, append to body
 		if(element == undefined)
 		{
 			element = $("body");
 		}
-			
-		//default settings
+
+		// Default settings
 		var settings = {
-
-		'rec_width': '220',
-		'rec_height': '200',
-		'rec_top': '0px',
-		'rec_left': '0px',
-		'recorderlayout_id' : 'flashrecarea',
-		'recorder_id' : 'audiorecorder',
-		'recorder_name': 'audiorecorder',
-		'wmode' : 'transparent',
-		'bgcolor': '#ff0000',
-		'swf_path': 'jRecorder.swf',
-		'host': 'acceptfile.php?filename=hello.wav',
-		'callback_started_recording' : function(){},
-		'callback_finished_recording' : function(){},
-		'callback_stopped_recording': function(){},
-		'callback_error_recording' : function(){},
-		'callback_activityTime': function(time){},
-		'callback_activityLevel' : function(level){}					
-		};
-
-		//if option array is passed, merget the values
-		if ( options ) { 
+			'rec_width': '220',
+			'rec_height': '200',
+			'rec_top': '0px',
+			'rec_left': '0px',
+			'recorderlayout_id' : 'flashrecarea',
+			'recorder_id' : 'audiorecorder',
+			'recorder_name': 'audiorecorder',
+			'wmode' : 'transparent',
+			'bgcolor': '#ff0000',
+			'swf_path': 'jRecorder.swf',
+			'host': 'acceptfile.php?filename=hello.wav',
+			'callback_started_recording' : function(){},
+			'callback_finished_recording' : function(){},
+			'callback_stopped_recording': function(){},
+			'callback_error_recording' : function(){},
+			'callback_activityTime': function(time){},
+			'callback_activityLevel' : function(level){},
+			'log' : function(info){ console.log(info) },
+			'debug' : false
+		};	
+	
+		// If option array is passed, merge the values
+		if ( options )
+		{ 
 	        $.extend( settings, options );
-	     }
+	    }
 
 		jRecorderSettings = settings;
-		
-		
-		
-			if($.browser.msie && Number($.browser.version) <= 8) {
+
+		if(!$.support.leadingWhitespace)
+		{
 			var objStr = '<object  name="'+ settings['recorder_name'] +'" id="' + settings['recorder_id'] + '" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="'+ settings['rec_width'] +'" height="'+ settings['rec_height']+'"></object>';
 
 			var paramStr = [
@@ -93,17 +85,16 @@
 			];
 
 			htmlObj = document.createElement(objStr);
-			for(var i=0; i < paramStr.length; i++) {
+
+			for(var i=0; i < paramStr.length; i++)
+			{
 				htmlObj.appendChild(document.createElement(paramStr[i]));
 			}
-			
-			
-			//var divStr = ' <div id="'+ settings['recorderlayout_id'] +'" style="position:absolute;top:0px;left:0px;z-index:-1" ></div>';
-			//var divObj = document.createElement(divStr);
-			
-			
-		} else {
-			var createParam = function(el, n, v) {
+		}
+		else
+		{
+			var createParam = function(el, n, v)
+			{
 				var p = document.createElement("param");
 				p.setAttribute("name", n);	
 				p.setAttribute("value", v);
@@ -120,10 +111,8 @@
 			
 			createParam(htmlObj, "allowscriptaccess", "always");
 			createParam(htmlObj, "bgcolor", settings['bgcolor']);
-			createParam(htmlObj, "wmode", settings['wmode'] );
-			
+			createParam(htmlObj, "wmode", settings['wmode'] );						
 		}
-
 
 		var divObj = document.createElement("div");
 		
@@ -132,27 +121,21 @@
 		
 		divObj.appendChild(htmlObj);
 		
-		
-		element.append(divObj);
+		element.append(divObj);		
 	};
 	
-	//function call to start a recording
-	$.jRecorder.record = function(max_time){
-		
-		
-								//change z-index to make it top
-								$(  '#' + jRecorderSettings['recorderlayout_id'] ).css('z-index', 1000);
-								getFlashMovie(jRecorderSettings['recorder_name']).jStartRecording(max_time);
-							
-							
-		
-						} 
+	// Function call to start a recording
+	$.jRecorder.record = function(max_time)
+	{
+		// Change z-index to make it top
+		$(  '#' + jRecorderSettings['recorderlayout_id'] ).css('z-index', 1000);
+		getFlashMovie(jRecorderSettings['recorder_name']).jStartRecording(max_time);
+	}
 
-	//function call to stop recording					
-	$.jRecorder.stop = function(){
-					
-		getFlashMovie(jRecorderSettings['recorder_name']).jStopRecording();
-							
+	// Function call to stop recording					
+	$.jRecorder.stop = function()
+	{
+		getFlashMovie(jRecorderSettings['recorder_name']).jStopRecording();					
 	} 
 
 	$.jRecorder.playPreview = function()
@@ -164,59 +147,61 @@
 	{
 		getFlashMovie(jRecorderSettings['recorder_name']).jStopPreview();
 	}
+	
+	$.jRecorder.addParameter = function(key, val)
+	{
+		getFlashMovie(jRecorderSettings['recorder_name']).jAddParameter(key, val);
+	}
+
+	$.jRecorder.removeParameter = function(key)
+	{
+		getFlashMovie(jRecorderSettings['recorder_name']).jRemoveParameter(key);
+	}
 		
 	//function call to send wav data to server url from the init configuration					
-	$.jRecorder.sendData = function(){
-					
-		getFlashMovie(jRecorderSettings['recorder_name']).jSendFileToServer();
-							
-	} 
+	$.jRecorder.sendData = function()
+	{
+		getFlashMovie(jRecorderSettings['recorder_name']).jSendFileToServer();						
+	}
 	
-	$.jRecorder.callback_started_recording = function(){
-		
-	
+	$.jRecorder.callback_started_recording = function()
+	{
 		jRecorderSettings['callback_started_recording']();
-		
 	}
 	
 	
-	$.jRecorder.callback_finished_recording  = function(){
-		
+	$.jRecorder.callback_finished_recording  = function()
+	{
 		jRecorderSettings['callback_finished_recording']();
-		
 	}
 	
-	$.jRecorder.callback_error_recording = function(){
-		
+	$.jRecorder.callback_error_recording = function()
+	{
 		jRecorderSettings['callback_error_recording']();
-		
 	}
 	
-	$.jRecorder.callback_stopped_recording = function(){
-		
+	$.jRecorder.callback_stopped_recording = function()
+	{	
 		jRecorderSettings['callback_stopped_recording']();
 	}
 	
 	
-	$.jRecorder.callback_finished_sending = function( data ){
-		
-		jRecorderSettings['callback_finished_sending']( data );
-		
+	$.jRecorder.callback_finished_sending = function( data )
+	{
+		jRecorderSettings['callback_finished_sending']( data );	
 	}
 	
-	$.jRecorder.callback_activityLevel = function(level){
-		
-		jRecorderSettings['callback_activityLevel'](level);	
-		
+	$.jRecorder.callback_activityLevel = function(level)
+	{	
+		jRecorderSettings['callback_activityLevel'](level);		
 	}
 	
-	$.jRecorder.callback_activityTime = function(time){
-		
-		//put back flash while recording
+	$.jRecorder.callback_activityTime = function(time)
+	{	
+		// Put back flash while recording
 		$(  '#' + jRecorderSettings['recorderlayout_id'] ).css('z-index', -1);
 		
 		jRecorderSettings['callback_activityTime'](time);
-		
 	}
 
 	$.jRecorder.callback_preview_complete = function()
@@ -224,12 +209,19 @@
 		jRecorderSettings['callback_preview_complete']();
 	}
 
-	//function to return flash object from name
-	function getFlashMovie(movieName) {
+	$.jRecorder.log = function(log)
+	{
+		if(jRecorderSettings['debug'])
+		{
+			jRecorderSettings['log']( log );
+		}
+	}
+
+		
+	// Function to return flash object from name
+	function getFlashMovie(movieName)
+	{
        var isIE = navigator.appName.indexOf("Microsoft") != -1;
        return (isIE) ? window[movieName] : document[movieName];
-     }
-
-
-	
+   }
 })(jQuery);
