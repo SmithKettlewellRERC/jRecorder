@@ -11,3 +11,6 @@ This is a fork of http://www.sajithmr.me/jrecorder/
 
 ## ZOMG Fork! Thank you!
 You're welcome to fork this project and send pull requests.
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/gabceb/jrecorder/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
